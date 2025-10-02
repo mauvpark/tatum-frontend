@@ -24,25 +24,12 @@ import {
 	PaginationPrevious,
 } from "@/components/ui/pagination";
 
-interface CloudData {
-	id: string;
-	provider: string;
-	name: string;
-	cloudGroupName: string[];
-	regionList: string[];
-}
+import { useCloudInstances } from "@/api/hooks/cloud/useCloudInstances";
+import type { CloudInstance } from "@/api/services/cloud/types";
 
 type SortConfig = {
-	key: keyof Pick<CloudData, "provider" | "name"> | null;
+	key: keyof Pick<CloudInstance, "provider" | "name"> | null;
 	direction: "asc" | "desc";
-};
-
-const fetchCloudData = async () => {
-	const response = await fetch("/api/cloud-instances");
-	if (!response.ok) {
-		throw new Error("Network response was not ok");
-	}
-	return response.json() as Promise<CloudData[]>;
 };
 
 export default function CloudManagement() {
@@ -55,13 +42,9 @@ export default function CloudManagement() {
 	const itemsPerPage = 10;
 
 	const {
-		data: cloudData = [],
-		isLoading,
-		error,
-	} = useQuery({
-		queryKey: ["cloudData"],
-		queryFn: fetchCloudData,
-	});
+		instances: { data: cloudData = [], isLoading, error },
+		deleteInstance,
+	} = useCloudInstances();
 
 	const handleSort = (key: "provider" | "name") => {
 		setSortConfig((current) => ({
