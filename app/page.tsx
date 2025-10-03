@@ -81,7 +81,12 @@ export default function CloudManagement() {
 
 	return (
 		<div className="container mx-auto py-10">
-			<h1 className="text-3xl font-bold mb-6">Cloud Management</h1>
+			<div className="flex justify-between items-center mb-6">
+				<h1 className="text-3xl font-bold">Cloud Management</h1>
+				<Button className="bg-blue-500 hover:bg-white hover:text-blue-500 transition-colors border border-blue-500">
+					Create Cloud
+				</Button>
+			</div>
 
 			<div className="rounded-md border">
 				<Table>
