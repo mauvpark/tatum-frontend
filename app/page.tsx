@@ -1,18 +1,10 @@
 "use client";
 
-import { useState } from "react";
-import { ArrowUpDown } from "lucide-react";
-import { Edit, Trash2 } from "lucide-react";
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHead,
-	TableHeader,
-	TableRow,
-} from "@/components/ui/table";
+import { useClouds } from "@/api/hooks/cloud/useClouds";
+import type { CloudsInstance } from "@/api/services/cloud/types";
+import CloudHeader from "@/components/cloud-header";
+import { CloudTable } from "@/components/cloud-table";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import {
 	Pagination,
 	PaginationContent,
@@ -21,12 +13,12 @@ import {
 	PaginationNext,
 	PaginationPrevious,
 } from "@/components/ui/pagination";
-
-import { useCloudInstances } from "@/api/hooks/cloud/useCloudInstances";
-import type { CloudInstance } from "@/api/services/cloud/types";
+import { Table, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { ArrowUpDown } from "lucide-react";
+import { useMemo, useState } from "react";
 
 type SortConfig = {
-	key: keyof Pick<CloudInstance, "provider" | "name"> | null;
+	key: keyof Pick<CloudsInstance, "provider" | "name"> | null;
 	direction: "asc" | "desc";
 };
 
@@ -41,8 +33,10 @@ export default function CloudManagement() {
 
 	const {
 		instances: { data: cloudData = [], isLoading, error },
+		createInstance,
+		updateInstance,
 		deleteInstance,
-	} = useCloudInstances();
+	} = useClouds();
 
 	const handleSort = (key: "provider" | "name") => {
 		setSortConfig((current) => ({
@@ -54,22 +48,30 @@ export default function CloudManagement() {
 		}));
 	};
 
-	const sortedData = [...cloudData].sort((a, b) => {
-		if (sortConfig.key === null) return 0;
+	const sortedData = useMemo(
+		() =>
+			[...cloudData].sort((a, b) => {
+				if (sortConfig.key === null) return 0;
 
-		const aValue = a[sortConfig.key].toLowerCase();
-		const bValue = b[sortConfig.key].toLowerCase();
+				const aValue = a[sortConfig.key].toLowerCase();
+				const bValue = b[sortConfig.key].toLowerCase();
 
-		if (sortConfig.direction === "asc") {
-			return aValue > bValue ? 1 : -1;
-		} else {
-			return aValue < bValue ? 1 : -1;
-		}
-	});
+				if (sortConfig.direction === "asc") {
+					return aValue > bValue ? 1 : -1;
+				} else {
+					return aValue < bValue ? 1 : -1;
+				}
+			}),
+		[cloudData, sortConfig]
+	);
 
-	const paginatedData = sortedData.slice(
-		(currentPage - 1) * itemsPerPage,
-		currentPage * itemsPerPage
+	const paginatedData = useMemo(
+		() =>
+			sortedData.slice(
+				(currentPage - 1) * itemsPerPage,
+				currentPage * itemsPerPage
+			),
+		[sortedData, currentPage]
 	);
 
 	const totalPages = Math.ceil(cloudData.length / itemsPerPage);
@@ -79,13 +81,7 @@ export default function CloudManagement() {
 
 	return (
 		<div className="container mx-auto py-10">
-			<div className="flex justify-between items-center mb-6">
-				<h1 className="text-3xl font-bold">Cloud Management</h1>
-				<Button className="bg-blue-500 hover:bg-white hover:text-blue-500 transition-colors border border-blue-500">
-					Create Cloud
-				</Button>
-			</div>
-
+			<CloudHeader />
 			<div className="rounded-md border">
 				<Table>
 					<TableHeader>
@@ -116,56 +112,7 @@ export default function CloudManagement() {
 							<TableHead>Delete</TableHead>
 						</TableRow>
 					</TableHeader>
-					<TableBody>
-						{paginatedData.map((item) => (
-							<TableRow key={item.id}>
-								<TableCell>{item.provider}</TableCell>
-								<TableCell>{item.name}</TableCell>
-								<TableCell>
-									<div className="flex flex-wrap gap-1">
-										{item.cloudGroupName.map((group) => (
-											<Badge
-												key={group}
-												variant="secondary"
-											>
-												{group}
-											</Badge>
-										))}
-									</div>
-								</TableCell>
-								<TableCell>
-									<div className="flex flex-wrap gap-1">
-										{item.regionList.map((region) => (
-											<Badge
-												key={region}
-												variant="outline"
-											>
-												{region}
-											</Badge>
-										))}
-									</div>
-								</TableCell>
-								<TableCell>
-									<Button
-										size="icon"
-										variant="ghost"
-										className="hover:text-blue-500 transition-colors"
-									>
-										<Edit className="h-4 w-4" />
-									</Button>
-								</TableCell>
-								<TableCell>
-									<Button
-										size="icon"
-										variant="ghost"
-										className="text-destructive"
-									>
-										<Trash2 className="h-4 w-4" />
-									</Button>
-								</TableCell>
-							</TableRow>
-						))}
-					</TableBody>
+					<CloudTable data={paginatedData} />
 				</Table>
 			</div>
 
