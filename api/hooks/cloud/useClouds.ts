@@ -1,25 +1,25 @@
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { cloudService } from "../../services/cloud/cloudService";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { cloudsService } from "../../services/cloud/cloudsService";
 import type {
-	CloudInstance,
+	CloudsInstance,
 	CreateCloudInstanceDTO,
 	UpdateCloudInstanceDTO,
 } from "../../services/cloud/types";
 
-export function useCloudInstances() {
+export const useClouds = () => {
 	const queryClient = useQueryClient();
-	const queryKey = ["cloudInstances"];
+	const queryKey = ["clouds"];
 
 	// 인스턴스 목록 조회
-	const instances = useQuery<CloudInstance[]>({
+	const instances = useQuery<CloudsInstance[]>({
 		queryKey,
-		queryFn: cloudService.getInstances,
+		queryFn: cloudsService.getInstances,
 	});
 
 	// 인스턴스 생성 mutation
 	const createInstanceMutation = useMutation({
 		mutationFn: (data: CreateCloudInstanceDTO) =>
-			cloudService.createInstance(data),
+			cloudsService.createInstance(data),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey });
 		},
@@ -33,7 +33,7 @@ export function useCloudInstances() {
 		}: {
 			id: string;
 			data: UpdateCloudInstanceDTO;
-		}) => cloudService.updateInstance(id, data),
+		}) => cloudsService.updateInstance(id, data),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey });
 		},
@@ -41,7 +41,7 @@ export function useCloudInstances() {
 
 	// 인스턴스 삭제 mutation
 	const deleteInstanceMutation = useMutation({
-		mutationFn: (id: string) => cloudService.deleteInstance(id),
+		mutationFn: (id: string) => cloudsService.deleteInstance(id),
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey });
 		},
@@ -110,4 +110,4 @@ export function useCloudInstances() {
 		updateInstance: handleUpdateInstance,
 		deleteInstance: handleDeleteInstance,
 	};
-}
+};

@@ -1,4 +1,4 @@
-export interface CloudInstance {
+export interface CloudsInstance {
 	id: string;
 	provider: string;
 	name: string;
@@ -6,5 +6,5 @@ export interface CloudInstance {
 	regionList: string[];
 }
 
-export type CreateCloudInstanceDTO = Omit<CloudInstance, "id">;
-export type UpdateCloudInstanceDTO = Partial<CloudInstance>;
+export type CreateCloudInstanceDTO = Omit<CloudsInstance, "id">;
+export type UpdateCloudInstanceDTO = Partial<CloudsInstance>;
