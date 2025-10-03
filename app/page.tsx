@@ -1,6 +1,5 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { ArrowUpDown } from "lucide-react";
 import { Edit, Trash2 } from "lucide-react";
@@ -17,7 +16,6 @@ import { Badge } from "@/components/ui/badge";
 import {
 	Pagination,
 	PaginationContent,
-	PaginationEllipsis,
 	PaginationItem,
 	PaginationLink,
 	PaginationNext,
@@ -181,11 +179,11 @@ export default function CloudManagement() {
 										Math.max(prev - 1, 1)
 									)
 								}
-								className={
+								className={`cursor-pointer hover:text-blue-500 transition-colors ${
 									currentPage === 1
 										? "pointer-events-none opacity-50"
 										: ""
-								}
+								}`}
 							/>
 						</PaginationItem>
 
@@ -194,6 +192,7 @@ export default function CloudManagement() {
 								<PaginationLink
 									onClick={() => setCurrentPage(index + 1)}
 									isActive={currentPage === index + 1}
+									className="cursor-pointer hover:text-blue-500 transition-colors data-[active]:bg-blue-500 data-[active]:text-white data-[active]:hover:text-white"
 								>
 									{index + 1}
 								</PaginationLink>
@@ -207,11 +206,11 @@ export default function CloudManagement() {
 										Math.min(prev + 1, totalPages)
 									)
 								}
-								className={
+								className={`cursor-pointer hover:text-blue-500 transition-colors ${
 									currentPage === totalPages
 										? "pointer-events-none opacity-50"
 										: ""
-								}
+								}`}
 							/>
 						</PaginationItem>
 					</PaginationContent>
