@@ -26,7 +26,6 @@ import { NameInput } from "./name-input";
 import { ProviderSelector } from "./provider-selector";
 import { RegionSelector } from "./region-selector";
 
-// Props and Initial State definitions remain the same
 interface CloudDialogProps {
 	isOpen: boolean;
 	onClose: () => void;
@@ -113,32 +112,6 @@ export function CloudDialog({
 		[]
 	);
 
-	const handleCredentialsChange = useCallback(
-		(field: string, value: string) => {
-			setFormData((prev) => ({
-				...prev,
-				credentials: {
-					...(prev.credentials as
-						| AWSCredential
-						| AzureCredential
-						| GCPCredential),
-					[field]: value,
-				},
-			}));
-		},
-		[]
-	);
-
-	const handleEventSourceChange = useCallback(
-		(field: string, value: string) => {
-			setFormData((prev) => ({
-				...prev,
-				eventSource: { ...prev.eventSource, [field]: value },
-			}));
-		},
-		[]
-	);
-
 	const handleReview = useCallback(() => {
 		if (!formData.name || !formData.provider) {
 			alert("Please fill in all required fields");
@@ -185,22 +158,26 @@ export function CloudDialog({
 							scheduleScanEnabled={formData.scheduleScanEnabled!}
 							onChange={handleFlagChange}
 						/>
-						<div className="grid gap-4">
-							<Label>Credentials</Label>
-							<CredentialsFields
-								provider={formData.provider}
-								credentials={formData.credentials}
-								onChange={handleCredentialsChange}
-							/>
-						</div>
-						<div className="grid gap-4">
-							<Label>Event Source</Label>
-							<EventSourceFields
-								provider={formData.provider}
-								eventSource={formData.eventSource}
-								onChange={handleEventSourceChange}
-							/>
-						</div>
+						{type === "edit" && (
+							<>
+								<div className="grid gap-4">
+									<Label>Credentials</Label>
+									<CredentialsFields
+										provider={formData.provider}
+										credentials={formData.credentials}
+									/>
+								</div>
+								<div className="grid gap-4">
+									<Label>Event Source</Label>
+									{formData.eventSource && (
+										<EventSourceFields
+											provider={formData.provider}
+											eventSource={formData.eventSource}
+										/>
+									)}
+								</div>
+							</>
+						)}
 					</div>
 				)}
 

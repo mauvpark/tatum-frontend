@@ -11,14 +11,9 @@ import React from "react";
 export const CredentialsFields = React.memo(function CredentialsFields({
 	provider,
 	credentials,
-	onChange,
 }: {
 	provider?: Provider;
 	credentials?: AWSCredential | AzureCredential | GCPCredential;
-	onChange: (
-		field: keyof (AWSCredential & AzureCredential & GCPCredential),
-		value: string
-	) => void;
 }) {
 	switch (provider) {
 		case "AWS":
@@ -27,13 +22,12 @@ export const CredentialsFields = React.memo(function CredentialsFields({
 					<div className="grid w-full gap-2">
 						<Label htmlFor="accessKeyId">Access Key ID</Label>
 						<Input
+							className="bg-gray-50"
+							readOnly
 							id="accessKeyId"
 							value={
 								(credentials as AWSCredential)?.accessKeyId ||
 								""
-							}
-							onChange={(e) =>
-								onChange("accessKeyId", e.target.value)
 							}
 						/>
 					</div>
@@ -42,31 +36,22 @@ export const CredentialsFields = React.memo(function CredentialsFields({
 							Secret Access Key
 						</Label>
 						<Input
+							className="bg-gray-50"
+							readOnly
 							id="secretAccessKey"
 							type="password"
 							value={
 								(credentials as AWSCredential)
 									?.secretAccessKey || ""
 							}
-							onChange={(e) =>
-								onChange("secretAccessKey", e.target.value)
-							}
 						/>
 					</div>
 				</>
 			);
 		case "AZURE":
-			return (
-				<>
-					{/* Azure fields... */}
-				</>
-			);
+			return <>{/* Azure fields... */}</>;
 		case "GCP":
-			return (
-				<>
-					{/* GCP fields... */}
-				</>
-			);
+			return <>{/* GCP fields... */}</>;
 		default:
 			return null;
 	}

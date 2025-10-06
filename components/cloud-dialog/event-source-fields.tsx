@@ -11,14 +11,9 @@ import React from "react";
 export const EventSourceFields = React.memo(function EventSourceFields({
 	provider,
 	eventSource,
-	onChange,
 }: {
 	provider?: Provider;
 	eventSource?: AWSEventSource & AzureEventSource & GCPEventSource;
-	onChange: (
-		field: keyof (AWSEventSource & AzureEventSource & GCPEventSource),
-		value: string
-	) => void;
 }) {
 	switch (provider) {
 		case "AWS":
@@ -26,11 +21,10 @@ export const EventSourceFields = React.memo(function EventSourceFields({
 				<div className="grid w-full gap-2">
 					<Label htmlFor="cloudTrailName">CloudTrail Name</Label>
 					<Input
+						className="bg-gray-50"
+						readOnly
 						id="cloudTrailName"
 						value={eventSource?.cloudTrailName || ""}
-						onChange={(e) =>
-							onChange("cloudTrailName", e.target.value)
-						}
 					/>
 				</div>
 			);
@@ -42,11 +36,10 @@ export const EventSourceFields = React.memo(function EventSourceFields({
 						Storage Account Name
 					</Label>
 					<Input
+						className="bg-gray-50"
+						readOnly
 						id="storageAccountName"
 						value={eventSource?.storageAccountName || ""}
-						onChange={(e) =>
-							onChange("storageAccountName", e.target.value)
-						}
 					/>
 				</div>
 			);
