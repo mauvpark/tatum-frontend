@@ -60,7 +60,6 @@ export function CloudDialog({
 
 	useEffect(() => {
 		if (type === "edit" && cloudData.data) {
-			console.log("data");
 			setFormData(cloudData.data);
 		}
 	}, [type, cloudData.data]);

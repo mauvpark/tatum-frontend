@@ -22,8 +22,8 @@ export const CredentialsFields = React.memo(function CredentialsFields({
 					<div className="grid w-full gap-2">
 						<Label htmlFor="accessKeyId">Access Key ID</Label>
 						<Input
-							className="bg-gray-50"
 							readOnly
+							className="bg-gray-50"
 							id="accessKeyId"
 							value={
 								(credentials as AWSCredential)?.accessKeyId ||
@@ -36,8 +36,8 @@ export const CredentialsFields = React.memo(function CredentialsFields({
 							Secret Access Key
 						</Label>
 						<Input
-							className="bg-gray-50"
 							readOnly
+							className="bg-gray-50"
 							id="secretAccessKey"
 							type="password"
 							value={
@@ -46,12 +46,100 @@ export const CredentialsFields = React.memo(function CredentialsFields({
 							}
 						/>
 					</div>
+					<div className="grid w-full gap-2">
+						<Label htmlFor="roleArn">Role ARN (Optional)</Label>
+						<Input
+							readOnly
+							className="bg-gray-50"
+							id="roleArn"
+							value={
+								(credentials as AWSCredential)?.roleArn || ""
+							}
+						/>
+					</div>
 				</>
 			);
 		case "AZURE":
-			return <>{/* Azure fields... */}</>;
+			return (
+				<>
+					<div className="grid w-full gap-2">
+						<Label htmlFor="tenantId">Tenant ID</Label>
+						<Input
+							readOnly
+							className="bg-gray-50"
+							id="tenantId"
+							value={
+								(credentials as AzureCredential)?.tenantId || ""
+							}
+						/>
+					</div>
+					<div className="grid w-full gap-2">
+						<Label htmlFor="subscriptionId">Subscription ID</Label>
+						<Input
+							readOnly
+							className="bg-gray-50"
+							id="subscriptionId"
+							value={
+								(credentials as AzureCredential)
+									?.subscriptionId || ""
+							}
+						/>
+					</div>
+					<div className="grid w-full gap-2">
+						<Label htmlFor="applicationId">Application ID</Label>
+						<Input
+							readOnly
+							className="bg-gray-50"
+							id="applicationId"
+							value={
+								(credentials as AzureCredential)
+									?.applicationId || ""
+							}
+						/>
+					</div>
+					<div className="grid w-full gap-2">
+						<Label htmlFor="secretKey">Secret Key</Label>
+						<Input
+							readOnly
+							className="bg-gray-50"
+							id="secretKey"
+							type="password"
+							value={
+								(credentials as AzureCredential)?.secretKey ||
+								""
+							}
+						/>
+					</div>
+				</>
+			);
 		case "GCP":
-			return <>{/* GCP fields... */}</>;
+			return (
+				<>
+					<div className="grid w-full gap-2">
+						<Label htmlFor="projectId">Project ID (Optional)</Label>
+						<Input
+							readOnly
+							className="bg-gray-50"
+							id="projectId"
+							value={
+								(credentials as GCPCredential)?.projectId || ""
+							}
+						/>
+					</div>
+					<div className="grid w-full gap-2">
+						<Label htmlFor="jsonText">JSON Text</Label>
+						<Input
+							readOnly
+							className="bg-gray-50"
+							id="jsonText"
+							type="password"
+							value={
+								(credentials as GCPCredential)?.jsonText || ""
+							}
+						/>
+					</div>
+				</>
+			);
 		default:
 			return null;
 	}
