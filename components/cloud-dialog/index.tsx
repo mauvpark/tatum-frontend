@@ -172,24 +172,30 @@ export function CloudDialog({
 						/>
 						{formData.scheduleScanEnabled && (
 							<FrequencySelector
-								scheduleScanSetting={formData.scheduleScanSetting}
+								scheduleScanSetting={
+									formData.scheduleScanSetting
+								}
 								onHourChange={handleHourChange}
 							/>
 						)}
-						<div className="grid gap-4">
-							<Label>Credentials</Label>
-							<CredentialsFields
-								provider={formData.provider}
-								credentials={formData.credentials}
-							/>
-						</div>
-						<div className="grid gap-4">
-							<Label>Event Source</Label>
-							<EventSourceFields
-								provider={formData.provider}
-								eventSource={formData.eventSource}
-							/>
-						</div>
+						{type === "edit" && (
+							<>
+								<div className="grid gap-4">
+									<Label>Credentials</Label>
+									<CredentialsFields
+										provider={formData.provider}
+										credentials={formData.credentials}
+									/>
+								</div>
+								<div className="grid gap-4">
+									<Label>Event Source</Label>
+									<EventSourceFields
+										provider={formData.provider}
+										eventSource={formData.eventSource}
+									/>
+								</div>
+							</>
+						)}
 					</div>
 				)}
 

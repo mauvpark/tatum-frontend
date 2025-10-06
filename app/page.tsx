@@ -40,7 +40,6 @@ const CloudManagement = () => {
 	} = useClouds();
 
 	useEffect(() => {
-		console.log(cloudData);
 		if (cloudData) {
 			setDisplayData(cloudData);
 		}
