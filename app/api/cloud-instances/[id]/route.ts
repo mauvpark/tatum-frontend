@@ -1,7 +1,7 @@
 import { promises as fs } from "fs";
 import path from "path";
 import { NextResponse } from "next/server";
-import { Cloud } from "@/types";
+import { Cloud } from "@/api/services/cloud/types";
 
 interface Params {
 	id: string;

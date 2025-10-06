@@ -1,4 +1,4 @@
-import { Cloud } from "@/types";
+import { Cloud } from "@/api/services/cloud/types";
 import React, { memo } from "react";
 import { CloudDialog } from "./cloud-dialog";
 import { Button } from "./ui/button";

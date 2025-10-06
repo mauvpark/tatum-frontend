@@ -1,5 +1,5 @@
 import { apiClient } from "@/api/client/apiClient";
-import { Cloud } from "@/types";
+import { Cloud } from "@/api/services/cloud/types";
 
 export const cloudService = {
 	getInstanceById: async (id: string) => {

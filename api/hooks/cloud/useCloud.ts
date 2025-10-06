@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import type { Cloud } from "@/types";
+import type { Cloud } from "@/api/services/cloud/types";
 import { cloudService } from "@/api/services/cloud/cloudService";
 
 export const useCloud = (id?: string) => {

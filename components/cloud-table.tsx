@@ -3,7 +3,7 @@ import { TableBody } from "@/components/ui/table";
 import { CloudTableRow } from "@/components/cloud-table-row";
 import type { CloudsInstance } from "@/api/services/cloud/types";
 import { CloudDialog } from "./cloud-dialog";
-import { Cloud } from "@/types";
+import { Cloud } from "@/api/services/cloud/types";
 
 interface CloudTableProps {
 	data: CloudsInstance[];
