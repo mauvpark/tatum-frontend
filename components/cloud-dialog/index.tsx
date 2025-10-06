@@ -14,6 +14,7 @@ import type {
 	Cloud,
 	GCPCredential,
 	Provider,
+	ScheduleScanSetting,
 } from "@/api/services/cloud/types";
 import { Loader2 } from "lucide-react";
 import React, { useCallback, useEffect, useState } from "react";
@@ -22,6 +23,7 @@ import { CloudGroupSelector } from "./cloud-group-selector";
 import { CredentialsFields } from "./credentials-fields";
 import { EnablementFlags } from "./enablement-flags";
 import { EventSourceFields } from "./event-source-fields";
+import { FrequencySelector } from "./frequency";
 import { NameInput } from "./name-input";
 import { ProviderSelector } from "./provider-selector";
 import { RegionSelector } from "./region-selector";
@@ -42,6 +44,7 @@ const initialFormState: Partial<Cloud> = {
 	eventProcessEnabled: false,
 	userActivityEnabled: false,
 	scheduleScanEnabled: false,
+	scheduleScanSetting: { frequency: "HOUR", hour: "0" },
 	credentials: {} as AWSCredential | AzureCredential | GCPCredential,
 	eventSource: {},
 };
@@ -111,6 +114,16 @@ export function CloudDialog({
 		[]
 	);
 
+	const handleHourChange = useCallback((value: string) => {
+		setFormData((prev) => ({
+			...prev,
+			scheduleScanSetting: {
+				...(prev.scheduleScanSetting as ScheduleScanSetting),
+				hour: value,
+			},
+		}));
+	}, []);
+
 	const handleReview = useCallback(() => {
 		if (!formData.name || !formData.provider) {
 			alert("Please fill in all required fields");
@@ -157,26 +170,26 @@ export function CloudDialog({
 							scheduleScanEnabled={formData.scheduleScanEnabled!}
 							onChange={handleFlagChange}
 						/>
-						{type === "edit" && (
-							<>
-								<div className="grid gap-4">
-									<Label>Credentials</Label>
-									<CredentialsFields
-										provider={formData.provider}
-										credentials={formData.credentials}
-									/>
-								</div>
-								<div className="grid gap-4">
-									<Label>Event Source</Label>
-									{formData.eventSource && (
-										<EventSourceFields
-											provider={formData.provider}
-											eventSource={formData.eventSource}
-										/>
-									)}
-								</div>
-							</>
+						{formData.scheduleScanEnabled && (
+							<FrequencySelector
+								scheduleScanSetting={formData.scheduleScanSetting}
+								onHourChange={handleHourChange}
+							/>
 						)}
+						<div className="grid gap-4">
+							<Label>Credentials</Label>
+							<CredentialsFields
+								provider={formData.provider}
+								credentials={formData.credentials}
+							/>
+						</div>
+						<div className="grid gap-4">
+							<Label>Event Source</Label>
+							<EventSourceFields
+								provider={formData.provider}
+								eventSource={formData.eventSource}
+							/>
+						</div>
 					</div>
 				)}
 
