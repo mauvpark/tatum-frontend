@@ -27,8 +27,12 @@ export const ProviderSelector = React.memo(function ProviderSelector({
 				</SelectTrigger>
 				<SelectContent>
 					<SelectItem value="AWS">AWS</SelectItem>
-					<SelectItem value="AZURE">Azure</SelectItem>
-					<SelectItem value="GCP">GCP</SelectItem>
+					<SelectItem value="AZURE" disabled>
+						Azure
+					</SelectItem>
+					<SelectItem value="GCP" disabled>
+						GCP
+					</SelectItem>
 				</SelectContent>
 			</Select>
 		</div>
