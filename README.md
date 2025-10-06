@@ -1,36 +1,53 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 테이텀 프론트엔드 과제
 
-## Getting Started
+## 실행 환경
 
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```
+node: v22.17.0
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 실행 방법
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+# 1. npm 의존성 설치
+npm install
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# 2. 실행
+npm run dev
+```
 
-## Learn More
+## API 관리 방안
 
-To learn more about Next.js, take a look at the following resources:
+주요 비즈니스 로직은 `api` 폴더 내에 다음과 같이 구성됩니다.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+├── client                    # Axios 인스턴스 (공통 헤더, 타임아웃 등 설정)
+│          
+├── hooks/[API 도메인]                     # 커스텀 React Hooks
+│
+└── services/[API 도메인]                  # API 호출 로직 (데이터 페칭)
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **client**: `axios` 또는 `fetch`와 같은 데이터 페칭 라이브러리의 공통 인스턴스를 담당하는 폴더입니다.
+- **services**: 실제 API 엔드포인트를 호출하고 데이터를 받아오는 함수들을 모아놓은 곳입니다. 컴포넌트나 훅에서 직접 `fetch`나 `axios`를 사용하지 않고, 이 서비스 함수를 통해 API를 호출합니다. 서비스는 API 도메인 주소 단위로 만들어 관리하고, 각 폴더 내의 `types.ts`에 API의 타입을 정의합니다.
+- **hooks**: `services`를 사용하여 데이터를 가져오고, 상태 관리(로딩, 에러 등)를 처리하는 커스텀 훅을 정의합니다. 컴포넌트에서는 이 훅을 가져다 사용함으로써 UI와 비즈니스 로직을 분리합니다. `hooks` 또한 마찬가지로 API 도메인 주소 단위로 구별합니다.
 
-## Deploy on Vercel
+## i18n 적용 방안
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. 도메인의 locale을 구분하는 코드를 만들어 locale을 구분할 수 있는 진입점을 만듭니다.
+2. Next js의 경우, dynamic routes 기능을 통해 값을 가져올 수 있으므로 가져온 값을 루트 레이아웃 등에서 프로바이더 형태로 하부 i18n에 전파할 수 있게 합니다.
+3. 각각의 텍스트들은 페이지 및 언어 단위로 구분된 json 파일에 `페이지~현재 컴포넌트의 사용처`로 키를 설정해 유지보수성을 높입니다. 이 때, 다중 언어 번역을 API로 연결해 locale과 번역할 텍스트만 보내 실시간 처리를 해 번역 텍스트 관리를 줄이거나 또는, 프로젝트와 번역 텍스트 관리 사이트를 분리해 관리 효율성을 높일 수도 있습니다.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 디자인
+
+- 사용자가 필터링을 통해 쉽게 찾을 수 있도록 오름차순, 내림차순의 필터를 추가했습니다(`Provider`, `Name`).
+- 사용자 상호작용이 가능한 버튼 및 아이콘과 같은 UI에는 색 반전을 추가해 사용자가 현재 상호작용하고 있는 부분을 두드러지게 표현했습니다.
+- 필수 부분에는 `*` 표시를 해 사용자가 필수 부분을 인지할 수 있게 했습니다.
+- 사용자가 상호작용 할 수 없는 `Provider` 등 클라우드 생성 및 수정 필드에는 얕은 회색으로 표현해 상호작용 할 수 없음을 표현했습니다.
+
+## AI 사용영역
+
+- 과제로 제시된 라이브러리에 기반해 기본 UI를 생성했습니다.
+- `mocks/data.json`에 과제로 제시된 types에 기반해 테스트할 수 있는 데이터를 생성했습니다.
+- 필요한 지시를 내려 bff를 만들고, AI와 상호작용하며 더 나은 api 관리 방식을 구성했습니다.
+- 팝업 컴포넌트를 분리하고, memoizing 되도록 지시해 최적화 된 컴포넌트가 설계되도록 사용했습니다.
