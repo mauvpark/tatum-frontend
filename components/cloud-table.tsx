@@ -7,9 +7,10 @@ import { Cloud } from "@/api/services/cloud/types";
 
 interface CloudTableProps {
 	data: CloudsInstance[];
+	onDelete: (id: string) => void;
 }
 
-export const CloudTable = memo(({ data }: CloudTableProps) => {
+export const CloudTable = memo(({ data, onDelete }: CloudTableProps) => {
 	const [isDialogOpen, setisDialogOpen] = useState(false);
 	const [selectedCloudId, setSelectedCloudId] = useState<string | null>(null);
 
@@ -36,6 +37,7 @@ export const CloudTable = memo(({ data }: CloudTableProps) => {
 							setSelectedCloudId(item.id);
 							setisDialogOpen(true);
 						}}
+						onDelete={onDelete}
 					/>
 				))}
 			</TableBody>

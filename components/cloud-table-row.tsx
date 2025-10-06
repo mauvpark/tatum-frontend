@@ -8,12 +8,13 @@ import type { CloudsInstance } from "@/api/services/cloud/types";
 interface CloudTableRowProps {
 	item: CloudsInstance;
 	onEdit: () => void;
+	onDelete: (id: string) => void;
 }
 
-export const CloudTableRow = memo(({ item, onEdit }: CloudTableRowProps) => {
+export const CloudTableRow = memo(({ item, onEdit, onDelete }: CloudTableRowProps) => {
 	const handleDelete = () => {
 		if (confirm("Are you sure you want to delete this cloud?")) {
-			console.log("Delete cloud with id:", item.id);
+			onDelete(item.id);
 		}
 	};
 

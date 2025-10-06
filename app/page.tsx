@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/pagination";
 import { Table, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ArrowUpDown } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 type SortConfig = {
 	key: keyof Pick<CloudsInstance, "provider" | "name"> | null;
@@ -28,15 +28,27 @@ const CloudManagement = () => {
 		key: null,
 		direction: "asc",
 	});
+	const [displayData, setDisplayData] = useState<CloudsInstance[]>([]);
 
 	const itemsPerPage = 10;
 
 	const {
-		instances: { data: cloudData = [], isLoading, error },
+		instances: { data: cloudData, isLoading, error },
 		createInstance,
 		updateInstance,
 		deleteInstance,
 	} = useClouds();
+
+	useEffect(() => {
+		console.log(cloudData);
+		if (cloudData) {
+			setDisplayData(cloudData);
+		}
+	}, [cloudData]);
+
+	const handleDelete = (id: string) => {
+		setDisplayData((prevData) => prevData.filter((item) => item.id !== id));
+	};
 
 	const handleSort = (key: "provider" | "name") => {
 		setSortConfig((current) => ({
@@ -50,7 +62,7 @@ const CloudManagement = () => {
 
 	const sortedData = useMemo(
 		() =>
-			[...cloudData].sort((a, b) => {
+			[...displayData].sort((a, b) => {
 				if (sortConfig.key === null) return 0;
 
 				const aValue = a[sortConfig.key].toLowerCase();
@@ -62,7 +74,7 @@ const CloudManagement = () => {
 					return aValue < bValue ? 1 : -1;
 				}
 			}),
-		[cloudData, sortConfig]
+		[displayData, sortConfig]
 	);
 
 	const paginatedData = useMemo(
@@ -74,7 +86,7 @@ const CloudManagement = () => {
 		[sortedData, currentPage]
 	);
 
-	const totalPages = Math.ceil(cloudData.length / itemsPerPage);
+	const totalPages = Math.ceil(displayData.length / itemsPerPage);
 
 	if (isLoading) return <div>Loading...</div>;
 	if (error) return <div>Error loading data</div>;
@@ -112,7 +124,7 @@ const CloudManagement = () => {
 							<TableHead>Delete</TableHead>
 						</TableRow>
 					</TableHeader>
-					<CloudTable data={paginatedData} />
+					<CloudTable data={paginatedData} onDelete={handleDelete} />
 				</Table>
 			</div>
 
