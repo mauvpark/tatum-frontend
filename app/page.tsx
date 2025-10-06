@@ -22,7 +22,7 @@ type SortConfig = {
 	direction: "asc" | "desc";
 };
 
-export default function CloudManagement() {
+const CloudManagement = () => {
 	const [currentPage, setCurrentPage] = useState(1);
 	const [sortConfig, setSortConfig] = useState<SortConfig>({
 		key: null,
@@ -165,4 +165,6 @@ export default function CloudManagement() {
 			</div>
 		</div>
 	);
-}
+};
+
+export default CloudManagement;
